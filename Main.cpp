@@ -349,3 +349,45 @@ void MENU :: edit_book(void)
 			break ;
 	}
 }
+
+
+
+
+
+int BOOK :: book_found(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int found=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			found = 1 ;
+			break ;
+		}
+	}
+	file.close() ;
+	return found ;
+}
+
+
+
+int BOOK :: bookname_found(char t1code[33])
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int found=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (!strcmpi(name,t1code))
+		{
+			found = 1 ;
+			break ;
+		}
+	}
+	file.close() ;
+	return found ;
+}
