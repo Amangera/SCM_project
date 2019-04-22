@@ -349,3 +349,22 @@ void MENU :: edit_book(void)
 			break ;
 	}
 }
+
+
+int BOOK :: recordno(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int count=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		count++ ;
+		if (bookcode == tcode)
+			break ;
+	}
+	file.close() ;
+	return count ;
+}
+
+
