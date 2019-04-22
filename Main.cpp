@@ -351,9 +351,6 @@ void MENU :: edit_book(void)
 }
 
 
-
-
-
 int BOOK :: book_found(int tcode)
 {
 	fstream file ;
@@ -373,6 +370,9 @@ int BOOK :: book_found(int tcode)
 }
 
 
+//**********************************************************
+// THIS FUNCTION RETURN 0 IF GIVEN BOOK NAME NOT FOUND
+//**********************************************************
 
 int BOOK :: bookname_found(char t1code[33])
 {
@@ -391,3 +391,49 @@ int BOOK :: bookname_found(char t1code[33])
 	file.close() ;
 	return found ;
 }
+
+
+//**********************************************************
+// THIS FUNCTION RETURN RECORD NO. FOR THE BOOK CODE
+//**********************************************************
+
+int BOOK :: recordno(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int count=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		count++ ;
+		if (bookcode == tcode)
+			break ;
+	}
+	file.close() ;
+	return count ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE AVAILABLE COPIES FOR THE GIVEN
+// BOOK CODE.
+//**********************************************************
+
+int BOOK :: available(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int tavail=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			tavail = avail ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tavail ;
+}
+
