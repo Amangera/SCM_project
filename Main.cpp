@@ -367,4 +367,25 @@ int BOOK :: recordno(int tcode)
 	return count ;
 }
 
+//********************
+// THIS FUNCTION RETURNS THE AVAILABLE COPIES FOR THE GIVEN
+// BOOK CODE.
+//********************
 
+int BOOK :: available(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int tavail=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			tavail = avail ;
+			break ;
+		}
+	}
+	
+	return tavail ;
+}
