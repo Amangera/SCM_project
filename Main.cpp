@@ -124,10 +124,6 @@ class DATE
 
 
 
-//**********************************************************
-// FUNCTION TO EXTEND GIVEN DATE BY 15 DAYS
-//**********************************************************
-
 void DATE :: extend_date(int d1, int m1, int y1, int days)
 {
 	static int month[] = {31,29,31,30,31,30,31,31,30,31,30,31} ;
@@ -150,11 +146,6 @@ void DATE :: extend_date(int d1, int m1, int y1, int days)
 	year = y1 ;
 }
 
-
-//**********************************************************
-// THIS FUNCTION RETURN THE DIFFERENCE BETWEEN TWO GIVEN
-// DATES
-//**********************************************************
 
 int DATE :: diff(int d1, int m1, int y1, int d2, int m2, int y2)
 {
@@ -180,11 +171,6 @@ int DATE :: diff(int d1, int m1, int y1, int d2, int m2, int y2)
 	return days ;
 }
 
-
-//**********************************************************
-// FUNCTION TO DISPLAY MAIN MENU & CONTROL ALL THE FUNCTION
-// IN THE MAIN MENU.
-//**********************************************************
 
 void MENU :: main_menu(void)
 {
@@ -268,10 +254,6 @@ void MENU :: main_menu(void)
 }
 
 
-//**********************************************************
-// FUNCTION TO DISPLAY EDIT MENU
-//**********************************************************
-
 void MENU :: edit_menu(void)
 {
 	char ch ;
@@ -306,10 +288,6 @@ void MENU :: edit_menu(void)
 }
 
 
-//**********************************************************
-// FUNCTION TO DISPLAY EDIT MENU FOR BOOK & CONTROL
-// ALL THE FUNCTION IN THE EDIT MENU.
-//**********************************************************
 
 void MENU :: edit_book(void)
 {
@@ -350,42 +328,38 @@ void MENU :: edit_book(void)
 	}
 }
 
-void MENU :: edit_member(void)
+int BOOK :: recordno(int tcode)
 {
-	char ch ;
-	while (1)
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int count=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
 	{
-		clrscr() ;
-		gotoxy(29,9) ;
-		cout <<"E D I T  M E M B E R S";
-		gotoxy(29,10) ;
-		cout <<"~~~~~~~~" ;
-		gotoxy(34,13) ;
-		cout <<"1. MODIFY" ;
-		gotoxy(34,14) ;
-		cout <<"2. DELETE" ;
-		gotoxy(34,15) ;
-		cout <<"0. EXIT" ;
-		gotoxy(29,17) ;
-		cout <<"Enter your choice : " ;
-		ch = getche() ;
-		if (ch == 27)
-			break ;
-		else
-		if (ch == '1')
-		{
-			WORKING W ;
-			W.modify_member() ;
-		}
-		else
-		if (ch == '2')
-		{
-			WORKING W ;
-			W.delete_member() ;
-		}
-		else
-		if (ch == '0')
+		count++ ;
+		if (bookcode == tcode)
 			break ;
 	}
+	file.close() ;
+	return count ;
+}
+
+
+int BOOK :: available(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int tavail=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			tavail = avail ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tavail ;
 }
 
