@@ -386,6 +386,6 @@ int BOOK :: available(int tcode)
 			break ;
 		}
 	}
-	
+	file.close() ;
 	return tavail ;
 }
