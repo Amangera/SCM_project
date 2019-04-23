@@ -391,3 +391,238 @@ int BOOK :: bookname_found(char t1code[33])
 	file.close() ;
 	return found ;
 }
+
+
+int BOOK :: recordno(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int count=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		count++ ;
+		if (bookcode == tcode)
+			break ;
+	}
+	file.close() ;
+	return count ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE AVAILABLE COPIES FOR THE GIVEN
+// BOOK CODE.
+//**********************************************************
+
+int BOOK :: available(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int tavail=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			tavail = avail ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tavail ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE NO. OF COPIES FOR THE GIVEN
+// BOOK CODE.
+//**********************************************************
+
+int BOOK :: no_of_copies(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int tcopies=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			tcopies = copies ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tcopies ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE BOOK NAME OF THE GIVEN BOOK
+// CODE.
+//**********************************************************
+
+char *BOOK :: bookname(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	char tname[33] ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			strcpy(tname,name) ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tname ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE AUTHOR NAME OF THE GIVEN BOOK
+// CODE.
+//**********************************************************
+
+char *BOOK :: authorname(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	char tauthor[26] ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			strcpy(tauthor,author) ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tauthor ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE BOOK PRICE OF THE GIVEN BOOK
+// CODE.
+//**********************************************************
+
+float BOOK :: bookprice(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	float tprice=0.0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			tprice = price ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tprice ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE BOOK CODE OF THE GIVEN BOOK
+// NAME.
+//**********************************************************
+
+int BOOK :: bookcodeof(char t1code[33])
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int tcode=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (!strcmpi(name,t1code))
+		{
+			tcode = bookcode ;
+			break ;
+		}
+	}
+	file.close() ;
+	return tcode ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION RETURNS THE NO. OF THE RECORDS IN THE BOOK
+// FILE.
+//**********************************************************
+
+int BOOK :: reccount(void)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int count=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+		count++ ;
+	file.close() ;
+	return count ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION DELETES THE RECORD OF THE GIVEN BOOK CODE.
+//**********************************************************
+
+void BOOK :: delete_rec(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	fstream temp ;
+	temp.open("temp.dat", ios::out) ;
+	file.seekg(0,ios::beg) ;
+	while ( !file.eof() )
+	{
+		file.read((char *) this, sizeof(BOOK)) ;
+		if ( file.eof() )
+			break ;
+		if ( bookcode != tcode )
+			temp.write((char *) this, sizeof(BOOK)) ;
+	}
+	file.close() ;
+	temp.close() ;
+	file.open("BOOK.DAT", ios::out) ;
+	temp.open("temp.dat", ios::in) ;
+	temp.seekg(0,ios::beg) ;
+	while ( !temp.eof() )
+	{
+		temp.read((char *) this, sizeof(BOOK)) ;
+		if ( temp.eof() )
+			break ;
+		file.write((char *) this, sizeof(BOOK)) ;
+	}
+	file.close() ;
+	temp.close() ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION ADD THE RECORD IN THE BOOK FILE
+//**********************************************************
+
+void BOOK :: add_new_book(int tcode,char tname[33], char tauthor[26], float tprice, int tcopies, int tavail)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::app) ;
+	bookcode = tcode ;
+	strcpy(name,tname) ;
+	strcpy(author,tauthor) ;
+	price = tprice ;
+	copies = tcopies ;
+	avail = tavail ;
+	file.write((char *) this, sizeof(BOOK)) ;
+	file.close() ;
+}
+
