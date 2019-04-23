@@ -124,10 +124,6 @@ class DATE
 
 
 
-//**********************************************************
-// FUNCTION TO EXTEND GIVEN DATE BY 15 DAYS
-//**********************************************************
-
 void DATE :: extend_date(int d1, int m1, int y1, int days)
 {
 	static int month[] = {31,29,31,30,31,30,31,31,30,31,30,31} ;
@@ -150,11 +146,6 @@ void DATE :: extend_date(int d1, int m1, int y1, int days)
 	year = y1 ;
 }
 
-
-//**********************************************************
-// THIS FUNCTION RETURN THE DIFFERENCE BETWEEN TWO GIVEN
-// DATES
-//**********************************************************
 
 int DATE :: diff(int d1, int m1, int y1, int d2, int m2, int y2)
 {
@@ -180,11 +171,6 @@ int DATE :: diff(int d1, int m1, int y1, int d2, int m2, int y2)
 	return days ;
 }
 
-
-//**********************************************************
-// FUNCTION TO DISPLAY MAIN MENU & CONTROL ALL THE FUNCTION
-// IN THE MAIN MENU.
-//**********************************************************
 
 void MENU :: main_menu(void)
 {
@@ -268,10 +254,6 @@ void MENU :: main_menu(void)
 }
 
 
-//**********************************************************
-// FUNCTION TO DISPLAY EDIT MENU
-//**********************************************************
-
 void MENU :: edit_menu(void)
 {
 	char ch ;
@@ -306,10 +288,6 @@ void MENU :: edit_menu(void)
 }
 
 
-//**********************************************************
-// FUNCTION TO DISPLAY EDIT MENU FOR BOOK & CONTROL
-// ALL THE FUNCTION IN THE EDIT MENU.
-//**********************************************************
 
 void MENU :: edit_book(void)
 {
@@ -350,48 +328,42 @@ void MENU :: edit_book(void)
 	}
 }
 
-
-
-
-
-int BOOK :: book_found(int tcode)
+int BOOK :: recordno(int tcode)
 {
 	fstream file ;
 	file.open("BOOK.DAT", ios::in) ;
 	file.seekg(0,ios::beg) ;
-	int found=0 ;
+	int count=0 ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		count++ ;
+		if (bookcode == tcode)
+			break ;
+	}
+	file.close() ;
+	return count ;
+}
+
+
+int BOOK :: available(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	int tavail=0 ;
 	while (file.read((char *) this, sizeof(BOOK)))
 	{
 		if (bookcode == tcode)
 		{
-			found = 1 ;
+			tavail = avail ;
 			break ;
 		}
 	}
 	file.close() ;
-	return found ;
+	return tavail ;
 }
 
-
-
-int BOOK :: bookname_found(char t1code[33])
-{
-	fstream file ;
-	file.open("BOOK.DAT", ios::in) ;
-	file.seekg(0,ios::beg) ;
-	int found=0 ;
-	while (file.read((char *) this, sizeof(BOOK)))
-	{
-		if (!strcmpi(name,t1code))
-		{
-			found = 1 ;
-			break ;
-		}
-	}
-	file.close() ;
-	return found ;
-}
-
+//<<<<<<< AMAN
 
 int BOOK :: recordno(int tcode)
 {
@@ -818,3 +790,5 @@ void BOOK :: list(void)
 	file.close () ;
 }
 
+//=======
+//>>>>>>> parallel
