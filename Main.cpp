@@ -626,3 +626,195 @@ void BOOK :: add_new_book(int tcode,char tname[33], char tauthor[26], float tpri
 	file.close() ;
 }
 
+void BOOK :: update_copies(int tcode, int tcopies, int tavail)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	fstream temp ;
+	temp.open("temp.dat", ios::out) ;
+	file.seekg(0,ios::beg) ;
+	while ( !file.eof() )
+	{
+		file.read((char *) this, sizeof(BOOK)) ;
+		if ( file.eof() )
+			break ;
+		if ( bookcode == tcode )
+		{
+			copies = tcopies ;
+			avail = tavail ;
+			temp.write((char *) this, sizeof(BOOK)) ;
+		}
+		else
+			temp.write((char *) this, sizeof(BOOK)) ;
+	}
+	file.close() ;
+	temp.close() ;
+	file.open("BOOK.DAT", ios::out) ;
+	temp.open("temp.dat", ios::in) ;
+	temp.seekg(0,ios::beg) ;
+	while ( !temp.eof() )
+	{
+		temp.read((char *) this, sizeof(BOOK)) ;
+		if ( temp.eof() )
+			break ;
+		file.write((char *) this, sizeof(BOOK)) ;
+	}
+	file.close() ;
+	temp.close() ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION MODIFY THE RECORD IN THE BOOK FILE FOR THE
+// GIVEN BOOK CODE
+//**********************************************************
+
+void BOOK :: modify(int tcode, char tname[33], char tauthor[26], float tprice)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	fstream temp ;
+	temp.open("temp.dat", ios::out) ;
+	file.seekg(0,ios::beg) ;
+	while ( !file.eof() )
+	{
+		file.read((char *) this, sizeof(BOOK)) ;
+		if ( file.eof() )
+			break ;
+		if ( bookcode == tcode )
+		{
+			strcpy(name,tname) ;
+			strcpy(author,tauthor) ;
+			price = tprice ;
+			temp.write((char *) this, sizeof(BOOK)) ;
+		}
+		else
+			temp.write((char *) this, sizeof(BOOK)) ;
+	}
+	file.close() ;
+	temp.close() ;
+	file.open("BOOK.DAT", ios::out) ;
+	temp.open("temp.dat", ios::in) ;
+	temp.seekg(0,ios::beg) ;
+	while ( !temp.eof() )
+	{
+		temp.read((char *) this, sizeof(BOOK)) ;
+		if ( temp.eof() )
+			break ;
+		file.write((char *) this, sizeof(BOOK)) ;
+	}
+	file.close() ;
+	temp.close() ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION DISPLAY THE RECORD FROM THE BOOK FILE
+// FOR THE GIVEN BOOK CODE
+//**********************************************************
+
+void BOOK :: display(int tcode)
+{
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		if (bookcode == tcode)
+		{
+			gotoxy(5,5) ;
+			cout <<"Book Code   : " <<bookcode ;
+			gotoxy(5,7) ;
+			cout <<"Book Name   : " <<name ;
+			gotoxy(5,8) ;
+			cout <<"Author Name : " <<author ;
+			gotoxy(5,9) ;
+			cout <<"Price       : Rs." <<price ;
+			gotoxy(5,10) ;
+			cout <<"Copies      : " <<price ;
+			gotoxy(5,11) ;
+			cout <<"Available   : " <<avail ;
+			break ;
+		}
+	}
+	file.close() ;
+}
+
+
+//**********************************************************
+// THIS FUNCTION DISPLAY THE LIST OF BOOKS.
+//**********************************************************
+
+void BOOK :: list(void)
+{
+	clrscr() ;
+	int row = 6 , found=0, flag=0 ;
+	char ch ;
+	gotoxy(33,2) ;
+	cout <<"LIST OF BOOKS" ;
+	gotoxy(32,3) ;
+	cout <<"~~~~~~~~~~~~~~~" ;
+	gotoxy(1,4) ;
+	cout <<"CODE  BOOK NAME                        AUTHOR                    PRICE  COPIES" ;
+	gotoxy(1,5) ;
+	cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" ;
+	fstream file ;
+	file.open("BOOK.DAT", ios::in) ;
+	file.seekg(0,ios::beg) ;
+	while (file.read((char *) this, sizeof(BOOK)))
+	{
+		flag = 0 ;
+		delay(20) ;
+		found = 1 ;
+		gotoxy(2,row) ;
+		cout <<bookcode ;
+		gotoxy(7,row) ;
+		cout	<<name ;
+		gotoxy(40,row) ;
+		cout	<<author ;
+		gotoxy(66,row) ;
+		cout	<<price ;
+		gotoxy(73,row) ;
+		cout <<copies ;
+		textbackground(WHITE) ; textcolor(BLACK) ;
+		gotoxy(40,row+1) ;
+		cprintf("STATUS: ") ;
+		textcolor(BLACK+BLINK) ;
+		cprintf("%d copies available",avail) ;
+		textbackground(BLACK) ; textcolor(LIGHTGRAY) ;
+		if ( row == 22 )
+		{
+			flag = 1 ;
+			row = 6 ;
+			gotoxy(1,25) ;
+			cout <<"Press any key to continue or Press <ESC> to exit" ;
+			ch = getch() ;
+			if (ch == 27)
+				break ;
+			clrscr() ;
+			gotoxy(33,2) ;
+			cout <<"LIST OF BOOKS" ;
+			gotoxy(32,3) ;
+			cout <<"~~~~~~~~~~~~~~~" ;
+			gotoxy(1,4) ;
+			cout <<"CODE  BOOK NAME                        AUTHOR                    PRICE  COPIES" ;
+			gotoxy(1,5) ;
+			cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" ;
+		}
+		else
+			row = row + 2 ;
+	}
+	if (!found)
+	{
+		gotoxy(5,10) ;
+		cout <<"\7Records not found" ;
+	}
+	if (!flag)
+	{
+		gotoxy(1,25) ;
+		cout <<"Press any key to continue..." ;
+		getche() ;
+	}
+	file.close () ;
+}
+
